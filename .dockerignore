@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+
+# Виртуальные окружения
+.venv
+venv
+env
+ENV
+env.bak
+venv.bak
+
+# Кэш и временные файлы
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+.tox
+.nox
+
+# Файлы окружения
+.env
+*.env
+!.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Документация и прочее
+docs
+README.md
+LICENSE
+
+# Логи
+*.log
+celerybeat-schedule
+celerybeat.pid
+
+# Данные (если есть)
+data
+postgres_data
