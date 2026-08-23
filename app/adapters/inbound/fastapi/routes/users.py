@@ -1,4 +1,3 @@
-# app/adapters/inbound/fastapi/routes/users.py
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, EmailStr, UUID4
 from datetime import datetime

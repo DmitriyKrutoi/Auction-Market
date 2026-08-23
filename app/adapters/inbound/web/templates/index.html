@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Главная | Auction Market{% endblock %}
+
+{% block content %}
+<h1>Добро пожаловать на Auction Market!</h1>
+
+{% if current_user %}
+    <p>Привет, {{ current_user.username }}!</p>
+    <p>Ваш баланс: {{ current_user.balance }}</p>
+{% else %}
+    <p>Присоединяйтесь к нам!</p>
+    <a href="/register" class="btn">Регистрация</a>
+    <a href="/login" class="btn">Войти</a>
+{% endif %}
+{% endblock %}

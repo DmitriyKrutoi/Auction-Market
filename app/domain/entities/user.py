@@ -11,3 +11,12 @@ class User:
     hashed_password: str = ""
     wallet: Wallet = field(default_factory=Wallet)
     created_at: datetime = field(default_factory=datetime.now)
+
+    @property 
+    def balance(self) -> int:
+        return int(self.wallet.balance)
+
+
+    @property
+    def frozen(self) -> int:
+        return int(self.wallet.frozen)

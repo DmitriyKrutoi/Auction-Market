@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль | Auction Market{% endblock %}
+
+{% block content %}
+<h1>Профиль</h1>
+
+<div class="profile-card">
+    <h2>{{ user.username }}</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>Баланс: {{ user.balance }}</p>
+    <p>Заморожено: {{ user.frozen }}</p>
+    <p>Дата регистрации: {{ user.created_at }}</p>
+</div>
+{% endblock %}
