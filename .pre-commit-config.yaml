@@ -23,3 +23,12 @@ repos:
     hooks:
       - id: flake8
         args: [--max-line-length=100]
+
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        args:
+          - --remove-all-unused-imports
+          - --remove-unused-variables
+          - --in-place

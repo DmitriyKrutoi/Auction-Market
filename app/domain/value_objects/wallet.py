@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from decimal import Decimal
 
+from app.domain.exceptions import InsufficientFundsError, InvalidOperationError
+
 
 @dataclass(frozen=True)
 class Wallet:
@@ -13,18 +15,23 @@ class Wallet:
 
     def freeze(self, amount: Decimal) -> "Wallet":
         if amount > self.available:
-            raise ValueError("Недостаточно средств для заморозки")
+            raise InsufficientFundsError(
+                f"Недостаточно средств для заморозки {amount}. Доступно: {self.available}"
+            )
         return Wallet(balance=self.balance, frozen=self.frozen + amount)
 
     def unfreeze(self, amount: Decimal) -> "Wallet":
         if amount > self.frozen:
-            raise ValueError("Нельзя разморозить больше, чем заморожено")
+            raise InvalidOperationError(
+                f"Нельзя разморозить {amount}. Заморожено: {self.frozen}"
+            )
         return Wallet(balance=self.balance, frozen=self.frozen - amount)
 
     def withdraw_frozen(self, amount: Decimal) -> "Wallet":
-        """Списать замороженные средства (при выигрыше аукциона)."""
         if amount > self.frozen:
-            raise ValueError("Недостаточно замороженных средств")
+            raise InvalidOperationError(
+                f"Недостаточно замороженных средств: {self.frozen}"
+            )
         return Wallet(balance=self.balance - amount, frozen=self.frozen - amount)
 
     def deposit(self, amount: Decimal) -> "Wallet":
