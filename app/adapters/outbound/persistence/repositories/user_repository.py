@@ -1,10 +1,13 @@
 from uuid import UUID
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.adapters.outbound.persistence.models import UserModel
 from app.application.ports.repositories import UserRepository
 from app.domain.entities.user import User
 from app.domain.value_objects.wallet import Wallet
-from app.adapters.outbound.persistence.models import UserModel
+
 
 class PostgresUserRepository(UserRepository):
     def __init__(self, session: AsyncSession):
@@ -33,6 +36,7 @@ class PostgresUserRepository(UserRepository):
             balance=user.wallet.balance,
             frozen=user.wallet.frozen,
             created_at=user.created_at,
+            is_admin=user.is_admin,
         )
         self.session.add(model)
         await self.session.flush()
@@ -45,4 +49,5 @@ class PostgresUserRepository(UserRepository):
             hashed_password=model.hashed_password,
             wallet=Wallet(balance=model.balance, frozen=model.frozen),
             created_at=model.created_at,
+            is_admin=model.is_admin,
         )
