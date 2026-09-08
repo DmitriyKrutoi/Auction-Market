@@ -1,5 +1,5 @@
 # ---------- Этап сборки зависимостей ----------
-FROM python:3.11-slim as builder
+FROM python:3.13-slim as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # ---------- Финальный образ ----------
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
@@ -25,12 +25,6 @@ WORKDIR /app
 # Не создаём отдельного пользователя для разработки
 # RUN useradd --create-home appuser
 # USER appuser
-
-COPY --chown=root:root app ./app
-
-COPY --chown=appuser:appuser alembic ./alembic
-
-COPY --chown=appuser:appuser alembic.ini .
 
 EXPOSE 8000
 
