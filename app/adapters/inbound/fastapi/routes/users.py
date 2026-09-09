@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, EmailStr, UUID4
-from datetime import datetime
-from decimal import Decimal
-from app.domain.entities.user import User
+
 from app.adapters.inbound.fastapi.dependencies import get_current_user
 from app.adapters.inbound.fastapi.schemas.users import UserMeResponse
-router = APIRouter(prefix="/users", tags=["users"])
+from app.domain.entities.user import User
 
+router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("/me", response_model=UserMeResponse)
