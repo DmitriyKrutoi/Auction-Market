@@ -13,7 +13,6 @@ app = FastAPI(title=settings.app_name, debug=settings.debug)
 app.mount(
     "/static", StaticFiles(directory="app/adapters/inbound/web/static"), name="static"
 )
-app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 # Подключаем шаблоны
 templates = Jinja2Templates(directory="app/adapters/inbound/web/templates")

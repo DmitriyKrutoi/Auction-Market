@@ -50,3 +50,8 @@ class PostgresMarketRepository(MarketRepository):
             total_bets_amount=Decimal(str(model.total_bets_amount)),
             created_at=model.created_at,
         )
+
+    async def list_open(self) -> list[Market]:
+        stmt = select(MarketModel).where(MarketModel.status == "open")
+        result = await self.session.scalars(stmt)
+        return [self._to_domain(model) for model in result]

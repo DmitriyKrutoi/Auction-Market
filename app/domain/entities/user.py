@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
-from uuid import UUID, uuid4
 from datetime import datetime
+from uuid import UUID, uuid4
+
 from app.domain.value_objects.wallet import Wallet
+
 
 @dataclass
 class User:
@@ -11,11 +13,11 @@ class User:
     hashed_password: str = ""
     wallet: Wallet = field(default_factory=Wallet)
     created_at: datetime = field(default_factory=datetime.now)
+    is_admin: bool = False
 
-    @property 
+    @property
     def balance(self) -> int:
         return int(self.wallet.balance)
-
 
     @property
     def frozen(self) -> int:
