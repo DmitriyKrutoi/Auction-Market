@@ -16,7 +16,7 @@ class Bet:
     id: UUID = field(default_factory=uuid4)
     status: BetStatus = BetStatus.PENDING
     potential_payout: Decimal = Decimal("0")
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=datetime.now)
 
     def __post_init__(self):
         """Вычисляем потенциальный выигрыш при создании."""
