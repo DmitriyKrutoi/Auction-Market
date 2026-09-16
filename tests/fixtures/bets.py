@@ -12,8 +12,8 @@ class BetFactory:
     @staticmethod
     def make_bet(**overrides) -> Bet:
         defaults = dict(
-            market_id=MarketFactory.make_market(),
-            user_id=UserFactory.make_user(),
+            market_id=MarketFactory.make_market().id,
+            user_id=UserFactory.make_user().id,
             amount=Decimal("100"),
             odds=Decimal("2.5"),
         )

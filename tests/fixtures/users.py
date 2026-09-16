@@ -15,7 +15,7 @@ class UserFactory:
             username="testuser",
             email="test@example.com",
             hashed_password="hashed_password",
-            wallet=WalletFactory.make_wallet(),  # ← переиспользуем фабрику
+            wallet=WalletFactory.make_wallet().id,  # ← переиспользуем фабрику
             is_admin=False,
         )
         return User(**{**defaults, **overrides})
