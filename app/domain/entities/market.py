@@ -16,7 +16,7 @@ class Market:
     id: UUID = field(default_factory=uuid4)
     status: MarketStatus = MarketStatus.OPEN
     total_bets_amount: Decimal = Decimal("0")
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=datetime.now)
 
     def close(self):
         """Закрывает рынок (после разрешения события)."""

@@ -2,13 +2,9 @@ from decimal import Decimal
 
 from app.domain.entities.market import Market
 
-from .events import EventFactory
+from .events import make_event
 
 
-class MarketFactory:
-    @staticmethod
-    def make_market(**overrides) -> Market:
-        defaults = dict(
-            event_id=EventFactory.make_event().id, outcome="Team A", odds=Decimal("2.5")
-        )
-        return Market(**{**defaults, **overrides})
+def make_market(**overrides) -> Market:
+    defaults = dict(event_id=make_event().id, outcome="Team A", odds=Decimal("2.5"))
+    return Market(**{**defaults, **overrides})

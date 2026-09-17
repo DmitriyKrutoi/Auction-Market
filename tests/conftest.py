@@ -2,14 +2,24 @@ import uuid
 
 import pytest
 
-from app.adapters.inbound.fastapi.dependencies import (get_password_hasher,
-                                                       get_token_service,
-                                                       get_uow)
+from app.adapters.inbound.fastapi.dependencies import (
+    get_password_hasher,
+    get_token_service,
+    get_uow,
+)
 from app.application.ports.password_hasher import PasswordHasher
 from app.application.ports.repositories import UserRepository
 from app.application.ports.token_service import TokenService
 from app.application.ports.unit_of_work import UnitOfWork
 from app.main import app
+
+pytest_plugins = [
+    "tests.fixtures.wallets",
+    "tests.fixtures.users",
+    "tests.fixtures.events",
+    "tests.fixtures.markets",
+    "tests.fixtures.bets",
+]
 
 
 class InMemoryUserRepository(UserRepository):

@@ -19,8 +19,14 @@ class Bet:
     created_at: datetime = field(default_factory=datetime.now)
 
     def __post_init__(self):
-        """Вычисляем потенциальный выигрыш при создании."""
+        self._validate()
         self.potential_payout = self.amount * self.odds
+
+    def _validate(self):
+        if self.amount < Decimal("100"):
+            raise InvalidOperationError("Минимальная ставка — 100")
+        if self.odds <= 1:
+            raise InvalidOperationError("Коэффициент должен быть > 1")
 
     def resolve(self, is_winner: bool):
         if self.status != BetStatus.PENDING:
