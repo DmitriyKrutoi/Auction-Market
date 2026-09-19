@@ -12,7 +12,7 @@ def make_user(**overrides) -> User:
         username="testuser",
         email="test@example.com",
         hashed_password="hashed_password",
-        wallet=make_wallet().id,  # ← переиспользуем фабрику
+        wallet=make_wallet(),  # ← переиспользуем фабрику
         is_admin=False,
     )
     return User(**{**defaults, **overrides})

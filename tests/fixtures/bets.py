@@ -41,3 +41,4 @@ def losing_bet() -> Bet:
 def returned_bet() -> Bet:
     bet = make_bet()
     bet.return_bet()
+    return bet

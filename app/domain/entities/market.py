@@ -38,4 +38,8 @@ class Market:
 
     def update_total_bets(self, amount: Decimal):
         """Обновляет общую сумму ставок."""
+        if amount < Decimal("100"):
+            raise InvalidOperationError(f"Ставка должна быть минимум 100: {amount}")
+        if self.status == MarketStatus.CLOSED:
+            raise MarketClosedError(f"Рынок уже закрыт: {self.status}")
         self.total_bets_amount += amount

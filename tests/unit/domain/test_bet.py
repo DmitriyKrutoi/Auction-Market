@@ -97,15 +97,15 @@ class TestBetResolve:
         assert pending_bet.status == BetStatus.LOST
 
     def test_cannot_resolve_already_won_bet(self, winning_bet):
-        with pytest.raises(InvalidOperationError, match="Нельзя разрешить"):
+        with pytest.raises(InvalidOperationError, match="Ставка уже разрешена"):
             winning_bet.resolve(is_winner=True)
 
     def test_cannot_resolve_already_lost_bet(self, losing_bet):
-        with pytest.raises(InvalidOperationError, match="Нельзя разрешить"):
+        with pytest.raises(InvalidOperationError, match="Ставка уже разрешена"):
             losing_bet.resolve(is_winner=False)
 
     def test_cannot_resolve_returned_bet(self, returned_bet):
-        with pytest.raises(InvalidOperationError, match="Нельзя разрешить"):
+        with pytest.raises(InvalidOperationError, match="Ставка уже разрешена"):
             returned_bet.resolve(is_winner=True)
 
 

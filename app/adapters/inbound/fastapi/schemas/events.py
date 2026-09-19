@@ -9,7 +9,7 @@ class CreateEventRequest(BaseModel):
     title: str = Field(..., min_length=3)
     description: str = ""
     category: str = ""
-    outcomes: List[str] = Field(..., min_items=2)
+    outcomes: List[str] = Field(..., min_length=2)
 
 
 class EventResponse(BaseModel):

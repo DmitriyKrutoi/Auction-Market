@@ -68,14 +68,14 @@ class TestMarketValidation:
 class TestMarketUpdateTotalBets:
     def test_rejects_zero_amount(self):
         market = make_market()
-        with pytest.raises(InvalidOperationError, match="положительной"):
+        with pytest.raises(InvalidOperationError, match="должна быть минимум 100"):
             market.update_total_bets(Decimal("0"))
 
     def test_rejects_negative_amount(self):
         market = make_market()
-        with pytest.raises(InvalidOperationError, match="положительной"):
+        with pytest.raises(InvalidOperationError, match="должна быть минимум 100"):
             market.update_total_bets(Decimal("-100"))
 
     def test_cannot_update_closed_market(self, closed_market):
-        with pytest.raises(MarketClosedError, match="закрытый"):
+        with pytest.raises(MarketClosedError, match="закрыт"):
             closed_market.update_total_bets(Decimal("100"))

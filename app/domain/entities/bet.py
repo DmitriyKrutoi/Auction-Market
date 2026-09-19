@@ -36,5 +36,5 @@ class Bet:
     def return_bet(self):
         """Возвращает ставку (при отмене события)."""
         if self.status != BetStatus.PENDING:
-            raise ValueError("Bet is already resolved")
+            raise InvalidOperationError(f"Нельзя вернуть ставку: {self.status}")
         self.status = BetStatus.RETURNED
