@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID, uuid4
 
-from app.domain.exceptions import InvalidOperationError
+from app.domain.exceptions import InvalidOperationError, ValidationError
 from app.domain.value_objects.enums import BetStatus
 
 
@@ -24,9 +24,9 @@ class Bet:
 
     def _validate(self):
         if self.amount < Decimal("100"):
-            raise InvalidOperationError("Минимальная ставка — 100")
+            raise ValidationError("Минимальная ставка — 100")
         if self.odds <= 1:
-            raise InvalidOperationError("Коэффициент должен быть > 1")
+            raise ValidationError("Коэффициент должен быть > 1")
 
     def resolve(self, is_winner: bool):
         if self.status != BetStatus.PENDING:

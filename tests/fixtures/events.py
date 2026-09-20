@@ -23,3 +23,10 @@ def resolved_event() -> Event:
     event = make_event()
     event.resolve("Team A")
     return event
+
+
+@pytest.fixture
+def cancelled_event() -> Event:
+    event = make_event()
+    event.cancel()
+    return event

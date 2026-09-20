@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID, uuid4
 
-from app.domain.exceptions import InvalidOperationError, MarketClosedError
+from app.domain.exceptions import InvalidOperationError, MarketClosedError, ValidationError
 from app.domain.value_objects.enums import MarketStatus
 
 
@@ -22,13 +22,13 @@ class Market:
 
     def _validate(self):
         if self.event_id is None:
-            raise InvalidOperationError("event_id обязателен")
+            raise ValidationError("event_id обязателен")
         if not self.outcome or not self.outcome.strip():
-            raise InvalidOperationError("Исход не может быть пустым")
+            raise ValidationError("Исход не может быть пустым")
         if self.odds <= Decimal("1"):
-            raise InvalidOperationError("Коэффициент должен быть больше 1")
+            raise ValidationError("Коэффициент должен быть больше 1")
         if self.total_bets_amount < Decimal("0"):
-            raise InvalidOperationError("Сумма ставок не может быть отрицательной")
+            raise ValidationError("Сумма ставок не может быть отрицательной")
 
     def close(self):
         """Закрывает рынок (после разрешения события)."""
