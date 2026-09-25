@@ -6,20 +6,16 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from pydantic import UUID4, BaseModel, Field
 
-from app.adapters.inbound.fastapi.dependencies import (get_admin_user,
-                                                       get_current_user,
-                                                       get_uow)
-from app.application.use_cases.create_market import (CreateMarket,
-                                                     CreateMarketCommand)
+from app.adapters.inbound.fastapi.dependencies import get_admin_user, get_current_user, get_uow
+from app.application.use_cases.create_market import CreateMarket, CreateMarketCommand
 from app.application.use_cases.list_market_bets import ListMarketBets
 from app.application.use_cases.list_markets import ListMarkets
 from app.application.use_cases.place_bet import PlaceBet, PlaceBetCommand
-from app.application.use_cases.resolve_market import (ResolveMarket,
-                                                      ResolveMarketCommand)
+from app.application.use_cases.resolve_market import ResolveMarket, ResolveMarketCommand
 from app.domain.entities.user import User
 from app.domain.exceptions import NotFoundError
 
-router = APIRouter(prefix="/api/v1/markets", tags=["markets"])
+router = APIRouter(prefix="/markets", tags=["markets"])
 
 
 class CreateMarketRequest(BaseModel):
@@ -70,9 +66,7 @@ async def create_market(
 ):
     use_case = CreateMarket(uow)
     result = await use_case.execute(
-        CreateMarketCommand(
-            event_id=request.event_id, outcome=request.outcome, odds=request.odds
-        )
+        CreateMarketCommand(event_id=request.event_id, outcome=request.outcome, odds=request.odds)
     )
     return result
 
@@ -91,9 +85,7 @@ async def get_market(market_id: UUID4, uow=Depends(get_uow)):
     return market
 
 
-@router.post(
-    "/{market_id}/bets", response_model=BetResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/{market_id}/bets", response_model=BetResponse, status_code=status.HTTP_201_CREATED)
 async def place_bet(
     market_id: UUID4,
     request: BetRequest,
@@ -102,9 +94,7 @@ async def place_bet(
 ):
     use_case = PlaceBet(uow)
     result = await use_case.execute(
-        PlaceBetCommand(
-            market_id=market_id, user_id=current_user.id, amount=request.amount
-        )
+        PlaceBetCommand(market_id=market_id, user_id=current_user.id, amount=request.amount)
     )
     return result
 

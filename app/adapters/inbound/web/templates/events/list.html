@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} | Auction Market{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>События</h1>
+    {% if current_user and current_user.is_admin %}
+    <a href="/events/create" class="btn">Создать событие</a>
+    {% endif %}
+</div>
+
+{% if request.query_params.get('resolved') %}
+<div class="alert alert-success">Событие успешно разрешено!</div>
+{% endif %}
+
+{% if request.query_params.get('error') %}
+<div class="alert alert-error">
+    Ошибка: {{ request.query_params.get('error') }}
+</div>
+{% endif %}
+
+{% if events %}
+<div class="events-grid">
+    {% for event in events %}
+    <div class="event-card">
+        <h2>{{ event.title }}</h2>
+        <p>{{ event.description }}</p>
+        <p><strong>Категория:</strong> {{ event.category }}</p>
+        <p><strong>Статус:</strong> {{ event.status }}</p>
+        <p><strong>Исходы:</strong> {{ event.outcomes | join(", ") }}</p>
+
+        {% if event.resolved_outcome %}
+        <p><strong>Победитель:</strong> {{ event.resolved_outcome }}</p>
+        {% endif %}
+
+        <div class="event-actions">
+            <a href="/events/{{ event.id }}" class="btn">Подробнее</a>
+
+            {% if current_user and current_user.is_admin and event.status == 'open' %}
+            <form method="POST" action="/events/{{ event.id }}/resolve" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <select name="winning_outcome" required>
+                    <option value="" disabled selected>Победитель...</option>
+                    {% for outcome in event.outcomes %}
+                    <option value="{{ outcome }}">{{ outcome }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-danger">Разрешить</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>Пока нет событий.</p>
+{% endif %}
+{% endblock %}

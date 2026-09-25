@@ -4,17 +4,17 @@ from fastapi import APIRouter, Depends, status
 from pydantic import UUID4
 
 from app.adapters.inbound.fastapi.dependencies import get_admin_user, get_uow
-from app.adapters.inbound.fastapi.schemas.events import (CreateEventRequest,
-                                                         EventResponse,
-                                                         ResolveEventRequest)
-from app.application.use_cases.create_event import (CreateEvent,
-                                                    CreateEventCommand)
+from app.adapters.inbound.fastapi.schemas.events import (
+    CreateEventRequest,
+    EventResponse,
+    ResolveEventRequest,
+)
+from app.application.use_cases.create_event import CreateEvent, CreateEventCommand
 from app.application.use_cases.list_events import ListEvents
-from app.application.use_cases.resolve_event import (ResolveEvent,
-                                                     ResolveEventCommand)
+from app.application.use_cases.resolve_event import ResolveEvent, ResolveEventCommand
 from app.domain.entities.user import User
 
-router = APIRouter(prefix="/api/v1/events", tags=["events"])
+router = APIRouter(prefix="/events", tags=["events"])
 
 
 @router.post("", response_model=EventResponse, status_code=status.HTTP_201_CREATED)

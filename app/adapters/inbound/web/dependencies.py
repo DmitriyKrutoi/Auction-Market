@@ -1,9 +1,10 @@
-from fastapi import Request, HTTPException, status
-from sqlalchemy.ext.asyncio import async_sessionmaker
-from app.adapters.inbound.fastapi.dependencies import token_service, async_session_factory
+import uuid
+
+from fastapi import HTTPException, Request, status
+
+from app.adapters.inbound.fastapi.dependencies import async_session_factory, token_service
 from app.adapters.outbound.persistence.unit_of_work import SqlAlchemyUnitOfWork
 from app.domain.entities.user import User
-import uuid
 
 
 async def get_current_user_from_cookie(request: Request) -> User | None:
@@ -11,14 +12,14 @@ async def get_current_user_from_cookie(request: Request) -> User | None:
     token = request.cookies.get("access_token")
     if not token:
         return None
-    
+
     try:
         # Декодируем токен
         payload = token_service.decode_token(token)
         user_id = uuid.UUID(payload.get("sub"))
     except Exception:
         return None
-    
+
     # Загружаем пользователя из БД
     async with SqlAlchemyUnitOfWork(async_session_factory) as uow:
         user = await uow.users.get_by_id(user_id)
@@ -31,6 +32,21 @@ async def require_user(request: Request) -> User:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_303_SEE_OTHER,
-            headers={"Location": "/login?error=not_authenticated"}
+            headers={"Location": "/login?error=not_authenticated"},
+        )
+    return user
+
+
+def get_csrf_token(request: Request) -> str:
+    return request.cookies.get("csrf_token", "")
+
+
+async def require_admin(request: Request):
+    """Требует авторизацию + права админа."""
+    user = await require_user(request)  # переиспользуем проверку авторизации
+    if not user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_303_SEE_OTHER,
+            headers={"Location": "/?error=forbidden"},
         )
     return user
