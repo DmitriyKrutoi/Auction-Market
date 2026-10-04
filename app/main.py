@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -7,8 +9,21 @@ from app.adapters.inbound.web.routes import auth as web_auth
 from app.adapters.inbound.web.routes import events as web_events
 from app.adapters.inbound.web.routes import pages as web_pages
 from app.config.config import settings
+from app.infrastructure.db.session import create_engine_from_settings, create_session_factory
 
-app = FastAPI(title=settings.app_name, debug=settings.debug)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    engine = create_engine_from_settings()
+    app.state.engine = engine
+    app.state.session_factory = create_session_factory(engine)
+
+    yield
+
+    await engine.dispose()
+
+
+app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
 
 # Подключаем статику
 app.mount("/static", StaticFiles(directory="app/adapters/inbound/web/static"), name="static")
