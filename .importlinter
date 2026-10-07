@@ -1,0 +1,47 @@
+[importlinter]
+root_package = app
+include_external_packages = True
+
+# Правило 1: Inbound-адаптеры не зависят друг от друга
+[importlinter:contract:adapters-independence]
+name = Inbound adapters must not import each other
+type = independence
+modules =
+    app.adapters.inbound.web
+    app.adapters.inbound.fastapi
+
+# Правило 2: Слоистая архитектура
+[importlinter:contract:layers]
+name = Hexagonal architecture layers
+type = layers
+layers =
+    app.adapters
+    app.application
+    app.domain
+
+# Правило 3: Domain не знает про инфраструктуру
+[importlinter:contract:domain-independence]
+name = Domain must be pure
+type = forbidden
+source_modules =
+    app.domain
+forbidden_modules =
+    sqlalchemy
+    fastapi
+    redis
+    httpx
+    app.adapters
+    app.infrastructure
+    app.application
+
+# Правило 4: Application не знает про адаптеры
+[importlinter:contract:application-independence]
+name = Application must not depend on adapters
+type = forbidden
+source_modules =
+    app.application
+forbidden_modules =
+    fastapi
+    sqlalchemy
+    app.adapters
+    app.infrastructure
