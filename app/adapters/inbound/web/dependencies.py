@@ -1,13 +1,17 @@
 import uuid
 
-from fastapi import HTTPException, Request, status
+from fastapi import Depends, HTTPException, Request, status
 
-from app.adapters.inbound.fastapi.dependencies import async_session_factory, token_service
 from app.adapters.outbound.persistence.unit_of_work import SqlAlchemyUnitOfWork
+from app.application.ports.token_service import TokenService
 from app.domain.entities.user import User
+from app.infrastructure.auth.jwt_token_service import get_token_service
 
 
-async def get_current_user_from_cookie(request: Request) -> User | None:
+async def get_current_user_from_cookie(
+    request: Request,
+    token_service: TokenService = Depends(get_token_service),
+) -> User | None:
     """Получает пользователя из JWT-токена в cookie."""
     token = request.cookies.get("access_token")
     if not token:
@@ -21,7 +25,7 @@ async def get_current_user_from_cookie(request: Request) -> User | None:
         return None
 
     # Загружаем пользователя из БД
-    async with SqlAlchemyUnitOfWork(async_session_factory) as uow:
+    async with SqlAlchemyUnitOfWork(request.app.state.session_factory) as uow:
         user = await uow.users.get_by_id(user_id)
         return user
 

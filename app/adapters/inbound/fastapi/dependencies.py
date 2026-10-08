@@ -1,4 +1,3 @@
-# app/adapters/inbound/fastapi/dependencies.py
 import uuid
 
 from fastapi import Depends, HTTPException, Request, status
