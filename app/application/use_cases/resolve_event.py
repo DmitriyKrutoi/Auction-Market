@@ -1,7 +1,8 @@
+from app.application.dto.auth_principal import AuthPrincipal
 from app.application.dto.events import EventResponse, ResolveEventCommand
+from app.application.policies.auth import require_admin
 from app.application.ports.unit_of_work import UnitOfWork
-from app.domain.exceptions import (ForbiddenError, InvalidOperationError,
-                                   NotFoundError)
+from app.domain.exceptions import InvalidOperationError, NotFoundError
 from app.domain.value_objects.enums import EventStatus
 
 
@@ -9,12 +10,10 @@ class ResolveEvent:
     def __init__(self, uow: UnitOfWork):
         self.uow = uow
 
-    async def execute(self, command: ResolveEventCommand) -> EventResponse:
+    async def execute(self, command: ResolveEventCommand, actor: AuthPrincipal) -> EventResponse:
         async with self.uow:
             # Проверяем права
-            admin = await self.uow.users.get_by_id(command.admin_id)
-            if not admin or not admin.is_admin:
-                raise ForbiddenError("Только администратор может разрешать события")
+            require_admin(actor)
 
             # Получаем событие
             event = await self.uow.events.get_by_id(command.event_id)

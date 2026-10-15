@@ -4,29 +4,16 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.adapters.outbound.persistence.unit_of_work import SqlAlchemyUnitOfWork
-from app.adapters.outbound.security.password_hasher import BcryptPasswordHasher
-from app.adapters.outbound.security.token_service import JwtTokenService
-from app.application.ports.password_hasher import PasswordHasher
 from app.application.ports.token_service import TokenService
 from app.application.ports.unit_of_work import UnitOfWork
 from app.domain.entities.user import User
 from app.domain.exceptions import ForbiddenError
+from app.infrastructure.di.jwt_token_service import get_token_service
 
 
 def get_uow(request: Request) -> UnitOfWork:
     return SqlAlchemyUnitOfWork(request.app.state.session_factory)
 
-
-def get_password_hasher() -> PasswordHasher:
-    return BcryptPasswordHasher()
-
-
-def get_token_service() -> TokenService:
-    JwtTokenService()
-
-
-password_hasher = BcryptPasswordHasher()
-token_service = JwtTokenService()
 
 # Схема для получения токена из заголовка
 bearer_scheme = HTTPBearer()
@@ -35,6 +22,7 @@ bearer_scheme = HTTPBearer()
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     uow: UnitOfWork = Depends(get_uow),
+    token_service: TokenService = Depends(get_token_service),
 ):
     token = credentials.credentials
     try:

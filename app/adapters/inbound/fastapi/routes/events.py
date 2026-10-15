@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from pydantic import UUID4
 
-from app.adapters.inbound.fastapi.dependencies import get_admin_user, get_uow
+from app.adapters.inbound.fastapi.dependencies import get_admin_user, get_current_user, get_uow
 from app.adapters.inbound.fastapi.schemas.events import (
     CreateEventRequest,
     EventResponse,
@@ -20,7 +20,7 @@ router = APIRouter(prefix="/events", tags=["events"])
 @router.post("", response_model=EventResponse, status_code=status.HTTP_201_CREATED)
 async def create_event(
     request: CreateEventRequest,
-    admin: User = Depends(get_admin_user),
+    admin: User = Depends(get_current_user),
     uow=Depends(get_uow),
 ):
     use_case = CreateEvent(uow)
@@ -30,7 +30,6 @@ async def create_event(
             description=request.description,
             category=request.category,
             outcomes=request.outcomes,
-            admin_id=admin.id,
         )
     )
     return result

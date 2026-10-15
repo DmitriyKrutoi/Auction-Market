@@ -1,4 +1,3 @@
-# app/domain/services/wallet_updater.py
 from app.application.dto.bet_summary import UserBetSummary
 from app.domain.entities.user import User
 

@@ -10,7 +10,6 @@ class CreateEventCommand:
     description: str
     category: str
     outcomes: List[str]
-    admin_id: UUID
 
 
 @dataclass(frozen=True)

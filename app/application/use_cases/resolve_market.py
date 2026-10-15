@@ -1,7 +1,6 @@
-from app.application.dto.resolve_market import (ResolveMarketCommand,
-                                                ResolveMarketResponse)
+from app.application.dto.resolve_market import ResolveMarketCommand, ResolveMarketResponse
 from app.application.ports.unit_of_work import UnitOfWork
-from app.domain.services.wallet_updater import WalletUpdater
+from app.application.services.wallet_updater import WalletUpdater
 
 
 class ResolveMarket:

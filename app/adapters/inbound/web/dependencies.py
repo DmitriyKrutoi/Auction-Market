@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException, Request, status
 from app.adapters.outbound.persistence.unit_of_work import SqlAlchemyUnitOfWork
 from app.application.ports.token_service import TokenService
 from app.domain.entities.user import User
-from app.infrastructure.auth.jwt_token_service import get_token_service
+from app.infrastructure.di.jwt_token_service import get_token_service
 
 
 async def get_current_user_from_cookie(

@@ -44,7 +44,6 @@ class BetResponse:
 class ResolveMarketCommand:
     market_id: UUID
     winning_outcome: bool
-    admin_id: UUID
 
 
 @dataclass(frozen=True)

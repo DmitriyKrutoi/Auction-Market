@@ -1,19 +1,18 @@
+from app.application.dto.auth_principal import AuthPrincipal
 from app.application.dto.events import CreateEventCommand, EventResponse
+from app.application.policies.auth import require_admin
 from app.application.ports.unit_of_work import UnitOfWork
 from app.domain.entities.event import Event
-from app.domain.exceptions import ForbiddenError
 
 
 class CreateEvent:
     def __init__(self, uow: UnitOfWork):
         self.uow = uow
 
-    async def execute(self, command: CreateEventCommand) -> EventResponse:
+    async def execute(self, command: CreateEventCommand, actor: AuthPrincipal) -> EventResponse:
         async with self.uow:
             # Проверяем права администратора
-            admin = await self.uow.users.get_by_id(command.admin_id)
-            if not admin or not admin.is_admin:
-                raise ForbiddenError("Только администратор может создавать события")
+            require_admin(actor)
 
             # Создаём событие
             event = Event(
