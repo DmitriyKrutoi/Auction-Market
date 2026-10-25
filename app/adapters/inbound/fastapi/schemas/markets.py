@@ -3,7 +3,36 @@ from decimal import Decimal
 from typing import List
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import UUID4, BaseModel, Field
+
+
+class CreateMarketRequest(BaseModel):
+    event_id: UUID4
+    outcome: str
+    odds: Decimal = Field(..., gt=1)
+
+
+class MarketResponse(BaseModel):
+    id: UUID4
+    event_id: UUID4
+    outcome: str
+    odds: Decimal
+    status: str
+    total_bets_amount: Decimal
+
+
+class BetRequest(BaseModel):
+    amount: Decimal = Field(..., gt=0)
+
+
+class ResolveMarketRequest(BaseModel):
+    winning_outcome: bool
+
+
+class ResolveMarketResponse(BaseModel):
+    resolved_bets: int
+    winners: int
+    losers: int
 
 
 class PlaceBetRequest(BaseModel):
